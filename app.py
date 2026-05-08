@@ -298,11 +298,7 @@ if uploaded_file is None:
         <b>📋 Format attendu</b><br><br>
         Le fichier doit contenir au moins une colonne numérique.<br>
         Une colonne <code>timestamp</code> ou <code>date</code> sera utilisée
-        automatiquement comme axe X si elle est présente.<br><br>
-        <b>Exemple :</b><br>
-        <code>timestamp,temperature</code><br>
-        <code>2024-01-01,25</code><br>
-        <code>2024-01-02,85</code> ← anomalie
+        automatiquement comme axe X si elle est présente.
         </div>
         """, unsafe_allow_html=True)
 
