@@ -296,9 +296,7 @@ if uploaded_file is None:
         </div>
         <div class="info-box">
         <b>📋 Format attendu</b><br><br>
-        Le fichier doit contenir au moins une colonne numérique.<br>
-        Une colonne <code>timestamp</code> ou <code>date</code> sera utilisée
-        automatiquement comme axe X si elle est présente.
+        Le fichier doit contenir au moins une colonne numérique.
         </div>
         """, unsafe_allow_html=True)
 
