@@ -89,6 +89,12 @@ st.markdown("""
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# SESSION STATE — mémorisation des résultats entre les rechargements
+# ════════════════════════════════════════════════════════════════════════════════
+if "results" not in st.session_state:
+    st.session_state.results = None
+
+# ════════════════════════════════════════════════════════════════════════════════
 # MODULE 1 — DÉTECTION DES COLONNES TEMPORELLES
 # ════════════════════════════════════════════════════════════════════════════════
 def detect_time_column(df: pd.DataFrame) -> str | None:
@@ -333,8 +339,6 @@ else:
     # ANALYSE
     # ════════════════════════════════════════════════════════════════════════════
     if analyze_btn:
-        st.divider()
-
         # ── Détection ────────────────────────────────────────────────────────────
         if method == "🛡️ Z-score Robuste (MAD)":
             anomalies_mask, z_scores, center, spread = detect_zscore_robust(series, threshold)
@@ -343,11 +347,39 @@ else:
             anomalies_mask, z_scores, center, spread = detect_manual(series, manual_low, manual_high)
             method_label = "Seuil Manuel"
 
+        # ── Sauvegarder dans session_state ───────────────────────────────────────
+        st.session_state.results = {
+            "df":             df,
+            "series":         series,
+            "selected_col":   selected_col,
+            "anomalies_mask": anomalies_mask,
+            "z_scores":       z_scores,
+            "center":         center,
+            "spread":         spread,
+            "method_label":   method_label,
+            "time_col":       time_col,
+        }
+
+    # ── Afficher les résultats (depuis session_state) ─────────────────────────
+    if st.session_state.results is not None:
+        r             = st.session_state.results
+        df            = r["df"]
+        series        = r["series"]
+        selected_col  = r["selected_col"]
+        anomalies_mask= r["anomalies_mask"]
+        z_scores      = r["z_scores"]
+        center        = r["center"]
+        spread        = r["spread"]
+        method_label  = r["method_label"]
+        time_col      = r["time_col"]
+
         n_anomalies = int(anomalies_mask.sum())
         n_total     = len(series)
 
         # Axe X (timestamp ou index numérique)
         x_vals, x_label = get_x_axis(df, series, time_col)
+
+        st.divider()
 
         # ── § 1 — RÉSUMÉ STATISTIQUE ─────────────────────────────────────────────
         st.markdown('<div class="section-header">📊 Résumé statistique</div>',
